@@ -21,4 +21,11 @@ public class wishlistController {
             return ResponseEntity.ok(wishlistService.addToWishlist(userId,wishlistItems));
     }
 
+    @GetMapping("/count")
+    public ResponseEntity<Integer> getWishListCount(@RequestParam Long userId){
+        System.out.println("Getting count of the items");
+        return ResponseEntity.ok(wishlistService.getWishlistCount(userId));
+    }
+
+
 }
