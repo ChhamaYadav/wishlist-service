@@ -3,6 +3,7 @@ package org.example;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -17,11 +18,42 @@ public class wishlistService {
         this.wishlistRepository = wishlistRepository;
     }
 
-    public List<WishlistItems> getWishlist(Long userId) {
-        return (List<WishlistItems>) wishlistRepository.findById(userId).map(Wishlist::getItems).orElse(Collections.emptyList());
+    public Wishlist addToWishlist(Long userId, WishlistItems items) {
+        Wishlist wishlist = wishlistRepository.findById(userId).orElse(new Wishlist());
+        wishlist.setUserId(userId);
+
+        // Ensure item list is initialized
+        if (wishlist.getItem() == null) {
+            wishlist.setItem(new ArrayList<>());
+        }
+
+        boolean alreadyExists = wishlist.getItem().stream()
+                .anyMatch(i -> i.getProductId().equals(items.getProductId()));
+
+        if (!alreadyExists) {
+            wishlist.getItem().add(items);
+        }
+
+        return wishlistRepository.save(wishlist);
     }
 
-    public void addtoWishlist(WishlistItems wishlistItems){
-        wishlistRepository.save(wishlistItems);
+
+    public List<WishlistItems> getWishlist(Long userId) {
+        return wishlistRepository.findById(userId)
+                .map(Wishlist::getItem)
+                .orElse(Collections.emptyList());
+    }
+
+    public void removeFromWishList(Long userId,Long productId){
+        wishlistRepository.findById(userId).ifPresent(wishlist -> {
+            wishlist.getItem().removeIf(item->item.getProductId().equals(productId));
+            wishlistRepository.save(wishlist);
+        });
+    }
+
+    public int getWishlistCount(Long userId){
+        return wishlistRepository.findById(userId)
+                .map(wishlist -> wishlist.getItem().size())
+                .orElse(0);
     }
 }
