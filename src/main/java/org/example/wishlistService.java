@@ -45,7 +45,8 @@ public class wishlistService {
     }
 
     public void removeFromWishList(Long userId,Long productId){
-        wishlistRepository.findById(userId).ifPresent(wishlist -> {
+        System.out.println("remove service called");
+        wishlistRepository.findByUserId(userId).ifPresent(wishlist -> {
             wishlist.getItem().removeIf(item->item.getProductId().equals(productId));
             wishlistRepository.save(wishlist);
         });

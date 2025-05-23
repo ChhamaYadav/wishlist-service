@@ -18,9 +18,9 @@ public class wishlistController {
     }
 
     @PostMapping("/add")
-    public ResponseEntity<Wishlist> addToWishlist(@RequestBody WishlistItems wishlistItems,@RequestParam Long userId){
+    public ResponseEntity<Wishlist> addToWishlist(@RequestBody WishlistItems wishlistItems){
         System.out.println("Adding the wishlist product to the db");
-            return ResponseEntity.ok(wishlistService.addToWishlist(userId,wishlistItems));
+            return ResponseEntity.ok(wishlistService.addToWishlist(wishlistItems.getUserId(),wishlistItems));
     }
 
     @GetMapping("/count")

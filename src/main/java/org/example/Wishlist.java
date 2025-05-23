@@ -17,6 +17,9 @@ import java.util.List;
 public class Wishlist {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
     private Long userId;
 
     @OneToMany(cascade = CascadeType.ALL,fetch = FetchType.EAGER)
