@@ -4,6 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/wishlist")
 public class wishlistController {
@@ -27,16 +29,17 @@ public class wishlistController {
         return ResponseEntity.ok(wishlistService.getWishlistCount(userId));
     }
 
-    @DeleteMapping("/delete/{userId}/{productId}")
+    @DeleteMapping("/remove/{userId}/{productId}")
     public ResponseEntity<Void> removeFromWishList(@PathVariable Long userId,@PathVariable Long productId){
+        System.out.println("Remove APi hits");
         wishlistService.removeFromWishList(userId, productId);
         return ResponseEntity.ok().build();
     }
 
     @GetMapping("/getAll/{userId}")
-    public ResponseEntity<Wishlist> getWishlist(@PathVariable Long userId){
-         wishlistService.getWishlist(userId);
-         return ResponseEntity.ok().build();
+    public ResponseEntity<List<WishlistItems>> getWishlist(@PathVariable Long userId){
+        System.out.println("Getting the wishlist according to the userId");
+         return ResponseEntity.ok(wishlistService.getWishlist(userId));
         }
 
 
